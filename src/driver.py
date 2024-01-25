@@ -13,24 +13,12 @@ from cloudshell.shell.core.resource_driver_interface import ResourceDriverInterf
 from cloudshell.shell.core.session.cloudshell_session import CloudShellSessionContext
 from cloudshell.shell.core.session.logging_session import LoggingSessionContext
 from cloudshell.shell.standards.pdu.autoload_model import PDUResourceModel
-from cloudshell.shell.standards.pdu.driver_interface import (
-    PDUResourceDriverInterface,
-)
+from cloudshell.shell.standards.pdu.driver_interface import PDUResourceDriverInterface
 from cloudshell.shell.standards.pdu.resource_config import PDUResourceConfig
-from cloudshell.snmp.snmp_configurator import EnableDisableSnmpConfigurator
 
-from cloudshell.raritan.cli.raritan_cli_configurator import (
-    RaritanCliConfigurator,
-)
-from cloudshell.raritan.flows.raritan_autoload_flow import (
-    RaritanAutoloadFlow,
-)
-from cloudshell.raritan.flows.raritan_outlets_state_flow import (
-    RaritanOutletsStateFlow,
-)
-from cloudshell.raritan.flows.raritan_enable_disable_snmp_flow import (
-    RaritanEnableDisableSnmpFlow,
-)
+from cloudshell.raritan.cli.raritan_cli_configurator import RaritanCliConfigurator
+from cloudshell.raritan.flows.raritan_autoload_flow import RaritanAutoloadFlow
+from cloudshell.raritan.flows.raritan_outlets_state_flow import RaritanOutletsStateFlow
 
 
 class RaritanShellDriver(ResourceDriverInterface, PDUResourceDriverInterface):
@@ -52,7 +40,7 @@ class RaritanShellDriver(ResourceDriverInterface, PDUResourceDriverInterface):
     @GlobalLock.lock
     def get_inventory(self, context: AutoLoadCommandContext) -> AutoLoadDetails:
         """Return device structure with all standard attributes."""
-        '''
+        """
         resource = Raritan.create_from_context(context)
         resource.vendor = 'specify the shell vendor'
         resource.model = 'specify the shell model'
@@ -60,7 +48,7 @@ class RaritanShellDriver(ResourceDriverInterface, PDUResourceDriverInterface):
         p1 = PowerSocket('p1')
         resource.add_sub_resource('1', p1)
         return resource.create_autoload_details()
-        '''
+        """
 
         with LoggingSessionContext(context) as logger:
             api = CloudShellSessionContext(context).get_api()
@@ -70,10 +58,6 @@ class RaritanShellDriver(ResourceDriverInterface, PDUResourceDriverInterface):
             cli_configurator = RaritanCliConfigurator.from_config(
                 resource_config, logger, self._cli
             )
-            enable_disable_snmp_flow = RaritanEnableDisableSnmpFlow(cli_configurator)
-            # snmp_configurator = EnableDisableSnmpConfigurator.from_config(
-            #     enable_disable_snmp_flow, resource_config, logger
-            # )
 
             resource_model = PDUResourceModel.from_resource_config(resource_config)
 
@@ -83,7 +67,9 @@ class RaritanShellDriver(ResourceDriverInterface, PDUResourceDriverInterface):
             logger.info("Autoload completed")
             return response
 
-    def _change_power_state(self, context: ResourceCommandContext, ports: list[str], state: str) -> None: # noqa E501
+    def _change_power_state(
+        self, context: ResourceCommandContext, ports: list[str], state: str
+    ) -> None:  # noqa E501
         """Set power outlets state based on provided data."""
         with LoggingSessionContext(context) as logger:
             api = CloudShellSessionContext(context).get_api()
@@ -109,7 +95,9 @@ class RaritanShellDriver(ResourceDriverInterface, PDUResourceDriverInterface):
         """Set power state as OFF to provided outlets."""
         self._change_power_state(context=context, ports=ports, state="off")
 
-    def PowerCycle(self, context: ResourceCommandContext, ports: list[str], delay: str) -> None: # noqa E501
+    def PowerCycle(
+        self, context: ResourceCommandContext, ports: list[str], delay: str
+    ) -> None:  # noqa E501
         """Set power state as CYCLE to provided outlets."""
         self._change_power_state(context=context, ports=ports, state="cycle")
 
