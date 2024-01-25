@@ -1,0 +1,5 @@
+cloudshell-shell-core~=6.0
+cloudshell-cli~=5.0
+# cloudshell-snmp~=5.0
+cloudshell-raritan~=1.0
+cloudshell-shell-pdu-standard~=1.0
