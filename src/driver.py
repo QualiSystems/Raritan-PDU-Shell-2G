@@ -23,7 +23,7 @@ from cloudshell.raritan.flows.raritan_outlets_state_flow import RaritanOutletsSt
 
 class RaritanShellDriver(ResourceDriverInterface, PDUResourceDriverInterface):
     SUPPORTED_OS = ["Raritan PDU"]
-    SHELL_NAME = "Raritan PDU Shell 2G"
+    SHELL_NAME = "Raritan PDU 2G"
 
     def __init__(self):
         self._cli = None
