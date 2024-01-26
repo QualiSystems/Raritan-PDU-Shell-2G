@@ -14,7 +14,7 @@ imports:
 
 node_types:
 
-  vendor.switch.Raritan PDU Shell 2G:
+  vendor.switch.Raritan PDU 2G:
     derived_from: cloudshell.nodes.PDU
     properties:
       SNMP V3 Authentication Protocol:
